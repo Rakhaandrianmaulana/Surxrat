@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced JavaScript Obfuscator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #d1d5db;
+        }
+        .tool-container {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .textarea-custom {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            width: 100%;
+            height: 250px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            color: #c9d1d9;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .textarea-custom:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+        }
+        .input-custom {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            width: 100%;
+            font-family: 'Fira Code', monospace;
+            color: #c9d1d9;
+        }
+        .select-custom {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+            padding: 0.6rem;
+            width: 100%;
+            color: #c9d1d9;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background-color: #238636; color: white; border-color: #30a14e; }
+        .btn-primary:hover { background-color: #2ea043; }
+        .btn-secondary { background-color: #30363d; color: #c9d1d9; border-color: #8b949e; }
+        .btn-secondary:hover { background-color: #484f58; border-color: #adbac7; }
+        .notification {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: #1f2937; color: white; padding: 12px 24px;
+            border-radius: 0.5rem; border: 1px solid #374151;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000;
+            opacity: 0; transition: opacity 0.5s, transform 0.5s; visibility: hidden;
+        }
+        .notification.show { opacity: 1; transform: translate(-50%, -10px); visibility: visible; }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-100">Advanced JavaScript Obfuscator</h1>
+            <p class="text-gray-400 mt-2">Pilih metode penyamaran kode yang paling sesuai untuk Anda.</p>
+        </header>
+
+        <div class="tool-container">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Input Column -->
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-200 mb-4">Input & Konfigurasi</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="method-select" class="block text-sm font-medium text-gray-400 mb-1">Pilih Metode:</label>
+                            <select id="method-select" class="select-custom">
+                                <option value="lana-vortex">Lana-Vortex (Enkripsi Berlapis)</option>
+                                <option value="lexical-scramble">Lexical Scramble (Acak Nama Variabel)</option>
+                                <option value="string-conceal">String Conceal (Sembunyikan Teks)</option>
+                            </select>
+                        </div>
+                        <div id="key-input-container">
+                            <label for="secret-key" class="block text-sm font-medium text-gray-400 mb-1">Kunci Rahasia:</label>
+                            <input type="text" id="secret-key" class="input-custom" placeholder="Dibutuhkan untuk beberapa metode...">
+                        </div>
+                        <div>
+                            <label for="code-input" class="block text-sm font-medium text-gray-400 mb-1">Kode Sumber:</label>
+                            <textarea id="code-input" class="textarea-custom" placeholder="Tulis atau tempel kode sumber di sini..."></textarea>
+                        </div>
+                         <div class="flex flex-wrap gap-3">
+                            <input type="file" id="file-input" class="hidden" accept=".js,.txt">
+                            <button onclick="document.getElementById('file-input').click()" class="btn btn-secondary">Buka File</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Column -->
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-200 mb-4">Output & Aksi</h2>
+                    <div class="space-y-4">
+                        <div>
+                             <label for="code-output" class="block text-sm font-medium text-gray-400 mb-1">Hasil Obfuscation:</label>
+                             <textarea id="code-output" class="textarea-custom" readonly placeholder="Hasil akan muncul di sini..."></textarea>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button id="obfuscate-btn" class="btn btn-primary">Obfuscate!</button>
+                            <button id="deobfuscate-btn" class="btn btn-secondary">Deobfuscate (jika memungkinkan)</button>
+                        </div>
+                        <div>
+                             <label for="map-output" class="block text-sm font-medium text-gray-400 mb-1">Peta/Log (jika ada):</label>
+                             <textarea id="map-output" class="textarea-custom" readonly placeholder="Peta untuk deobfuscation atau log proses akan muncul di sini..."></textarea>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button id="copy-output-btn" class="btn btn-secondary">Salin Output</button>
+                            <button id="copy-map-btn" class="btn btn-secondary">Salin Peta/Log</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">Pesan notifikasi</div>
+
+    <!-- Load Method Scripts -->
+    <script src="methods/lana-vortex.js"></script>
+    <script src="methods/lexical-scramble.js"></script>
+    <script src="methods/string-conceal.js"></script>
+    
+    <!-- Load Main Controller Script -->
+    <script src="main.js"></script>
+
+</body>
+</html>
